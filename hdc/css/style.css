@@ -279,7 +279,6 @@ section{
 .contact form span{
     font-size: 1.7rem;
     color: var(--black);
-
 }
 
 /*-- Register --*/
@@ -407,6 +406,116 @@ section{
 
 
 
+/*---------PATIENT LIST ---------------*/
+.col-md-8{
+    margin-top: 5rem;
+}
+.patientlist{
+    font-size: 2rem;
+}
+.patientlist .subheader{
+    text-align: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    padding-bottom: 1rem;
+}
+
+/*---------Add Patient LIST ---------------*/
+.addpatient{
+    background-color: var(--light-bg);
+}
+.addpatient form{
+    border-radius: .5rem;
+    background-color: var(--white);
+    padding: 3rem;
+    margin: 0 auto;
+    max-width: 55rem;
+}
+
+.addpatient .container form span{
+    font-size: 1.7rem;
+    color: var(--black);
+}
+
+.addpatient .container form .box, select{
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-radius: .5rem;
+    background-color: var(--light-bg);
+    padding: 1.2rem 1.4rem;
+    font-size: 1.7rem;
+    color: var(--black);
+    text-transform: none;
+}
+
+.addpatient form .link-btn{
+    display: inline-block;
+    padding:1rem 3rem;
+    border-radius: .5rem;
+    background-color: goldenrod;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.7rem;
+    color:var(--white);
+    margin-bottom: 1rem;
+ }
+ .addpatient form .btn{
+    display: inline-block;
+    padding:1rem 3rem;
+    border-radius: .5rem;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.7rem;
+    color:var(--white);
+    margin-bottom: 1rem;
+ }
+
+ .addpatient form .link-btn:hover{
+    background-color: var(--black);
+    color:var(--white);
+ }
+
+/*----- EDIT PATIENT  ------------*/
+.row.d-flex.justify-content-center{
+    background-color: var(--light-bg);
+}
+.card{
+    background-color: var(white);
+}
+
+.editpatient form{
+    border-radius: .5rem;
+    background-color: var(--white);
+    padding: 2rem 5rem;
+    margin: 0 auto;
+}
+
+.editpatient  form span{
+    font-size: 1.7rem;
+    color: var(--black);
+}
+
+.editpatient form .box, select{
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-radius: .5rem;
+    background-color: var(--light-bg);
+    padding: 1.2rem 1.4rem;
+    font-size: 1.7rem;
+    color: var(--black);
+    text-transform: none;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -423,7 +532,11 @@ section{
     section{
         padding: 5rem 2rem;
     }
+    .contact form .box .select option{
+       width: 80% !important;
+     }
 }
+
 
 @media (max-width:768px){
     section{
@@ -466,6 +579,10 @@ section{
      .home.content{
         width: auto;
      }
+
+     .contact form .box .select option{
+       width: 80% !important;
+     }
 }
 
 @media (max-width:450px){
@@ -477,5 +594,8 @@ section{
      }
     .heading{
         font-size: 3rem;
+    }
+    .contact form .box .select option{
+        width: 80% !important;
     }
 }

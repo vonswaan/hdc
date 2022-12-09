@@ -1,7 +1,8 @@
 <?php
 
 $conn = mysqli_connect('localhost','root','P@ssw0rd','hdc') or die('connection failed');
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 if(isset($_POST['submit'])){
 
     $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
@@ -9,21 +10,124 @@ if(isset($_POST['submit'])){
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $number = mysqli_real_escape_string($conn, $_POST['number']);
     $date = mysqli_real_escape_string($conn, $_POST['date']);
+    $emaildate = $newDate = date("F-d-Y", strtotime($date));
+    $apptime = $_POST['apptime'];
     $apptype = $_POST['apptype'];
     $dentist = $_POST['dentist'];
 
-    $insert = " INSERT INTO `appointment-db`(`firstname`, `lastname`, `email`, `mobile`, `apptype`,`dentist`,`appdate`) VALUES ('$firstname','$lastname','$email','$number','$apptype','$dentist','$date')";
+    $insert = " INSERT INTO `appointment-db`(`firstname`, `lastname`, `email`, `mobile`, `apptype`,`dentist`,`appdate`,`apptime`) VALUES ('$firstname','$lastname','$email','$number','$apptype','$dentist','$date','$apptime')";
     $create = mysqli_query($conn,$insert);
 
     if($create){
         $message[] = "<i>Appointment booked!<br>Appointment details Sent on</i> <br><b>$email</b>";
-       header("Refresh:10");
+       header("Refresh:5");
     }else{
         $message[] = "Appointment Failed"; 
     }
 
-}
+//SEND EMAIL
 
+    $name = "Husmillo Dental";
+    $to = "$email";
+    $subject = "HDC Appointment Details.";
+    $body = "
+<html>
+<head>
+  <title>Appointment Book!</title>
+  <style>
+table, td {
+  border:2px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+tr:nth-child(even) {background-color: #f2f2f2;}
+</style>
+</head>
+<body>
+
+<h3>Appointment booked!</h3>
+
+<p>Thank you for making appointment with us!<br>
+Below is the details of your appointment.<br></p>
+
+<table style='width:60%'>
+  <tr>
+    <td><b>First Name</b></td>
+    <td>$firstname</td>
+  </tr>
+  <tr>
+    <td><b>Last Name</b></td>
+    <td>$lastname</td>
+  </tr>
+  <tr>
+    <td><b>Appointment Type</b></td>
+    <td>$apptype</td>
+  </tr>
+    <tr>
+    <td><b>Appointment Date</b></td>
+    <td>$emaildate</td>
+  </tr>
+    <tr>
+    <td><b>Appointment Time</b></td>
+    <td>$apptime</td>
+  </tr>
+    <tr>
+    <td><b>Dentist</b></td>
+    <td>$dentist</td>
+  </tr>
+</table>
+
+<p>Please present this in our reception to guide you with your appointment.<br>
+Please be arrive earlier before appointed date. <br><br><br>
+Thank you,<br>
+<b>Husmillo Dental Care</b><br></p>
+<img src='img/favicon.png'></img>
+</body>
+</html>
+";
+
+
+
+    $from = "hdclipa.smtp@gmail.com";
+    $password = "gtvjoucvglculyxt";
+
+    
+    require 'PHPMailer/src/Exception.php';
+    require 'PHPMailer/src/PHPMailer.php';
+    require 'PHPMailer/src/SMTP.php';
+    $mail = new PHPMailer();
+
+    //SMTP SETTINGS
+    $mail->isSMTP();
+    //$mail->SMTPDebug = 3;
+    $mail->Host = "smtp.gmail.com"; 
+    $mail->SMTPAuth = true;
+    $mail->Username = $from;
+    $mail->Password = $password;
+    $mail->Port = 587;
+    $mail->SMTPSecure = "tsl";
+    $mail->SMTPOptions = array(
+        'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+        )
+        );
+
+    //Email Setting
+    $mail->isHTML(true);
+    $mail->setFrom($from, $name);
+    $mail->addAddress($to);
+    $mail->Subject = ("$subject");
+    $mail->Body = $body;
+    if($mail->send()){
+     //   echo "Email Sent!";
+    }else {
+        echo "Error". $mail->ErrorInfo;
+    }
+    //SEND EMAIL
+
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +136,7 @@ if(isset($_POST['submit'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/favicon.png" type="image/x-icon">
-    <title>HDC</title>
+    <title>Husmillo DC</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -42,6 +146,7 @@ if(isset($_POST['submit'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+
 
 </head>
 <body>
@@ -228,7 +333,7 @@ if(isset($_POST['submit'])){
         <section class="contact" id="contact">
             <h1 class="heading">make appointment</h1>
 
-            <form id ="appoint" action="" method="POST">
+            <form id ="appoint" action="#contact" method="POST">
                 <?php
                     if(isset($message)){
                        foreach($message as $message){
@@ -246,17 +351,17 @@ if(isset($_POST['submit'])){
                 <span>Mobile number : </span>
                 <input type="number" name="number" pattern="[0-9]{11,14}" placeholder="enter number" class="box" required>
                 <span>Appointment Type : </span>
-                <select name="apptype" class="select">
-                    <option value="brace">Dental Brace</option>
-                    <option value="oral prophylaxis">Oral Prophylaxis</option>
-                    <option value="brides">Bridges</option>
-                    <option value="denture">Denture</option>
+                <select name="apptype" class="select" form-control>
+                    <option value="Dental Brace">Dental Brace</option>
+                    <option value="Brace Adjustment">Brace Adjustment</option>
+                    <option value="Oral Prophylaxis">Oral Prophylaxis</option>
+                    <option value="Bridges">Bridges</option>
+                    <option value="Denture">Denture</option>
                     <option value="tooth filling">Tooth Filling</option>
-                    <option value="tooth extraction">Tooth Extraction</option>
-                    <option value="root canal">Root Canal Tx</option>
-                    <option value="veneers">Veneers</option>
-                    <option value="dental xray">Dental X-Ray</option>
-                    
+                    <option value="Tooth Extraction">Tooth Extraction</option>
+                    <option value="Root Canal Tx">Root Canal Tx</option>
+                    <option value="Veneers">Veneers</option>
+                    <option value="Dental X-Ray">Dental X-Ray</option>
                 </select>
                 <span>Dentist : </span>
                 <select name="dentist" class="select">
@@ -265,7 +370,19 @@ if(isset($_POST['submit'])){
                     <option value="Doc Nicolo Husmillo">Doc Nicolo Husmillo</option>
                 </select>
                 <span>Appointment date : </span>
-                <input type="datetime-local" name="date" class="box" required onkeypress="return true" min="1900/01/01" max="2030/12/31" value="">
+                <input type="date" name="date" class="box" required onkeypress="return true" min="1900/01/01" max="2030/12/31" value="">
+                <span>Appointment Time : </span>
+                <select name="apptime" class="select" form-control>
+                    <option value="10AM">10AM - 11AM</option>
+                    <option value="11AM">11AM - 12PM</option>
+                    <option value="12PM">12PM - 1PM</option>
+                    <option value="1PM">1PM - 2PM</option>
+                    <option value="2PM">2PM - 3PM</option>
+                    <option value="3PM">3PM - 4PM</option>
+                    <option value="4PM">4PM - 5PM</option>
+                    <option value="5PM">5PM - 6PM</option>
+                    <option value="6PM">6PM - 7PM</option>
+                </select>
                 <input type="submit" value="make appointment" name="submit" class="link-btn">
             </form>
 

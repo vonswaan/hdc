@@ -1,5 +1,6 @@
 <?php
 
+
 $conn = mysqli_connect('localhost','root','P@ssw0rd','hdc') or die('connection failed');
 
 if(isset($_POST['register-btn'])){
